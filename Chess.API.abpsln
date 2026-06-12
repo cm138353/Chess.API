@@ -1,0 +1,49 @@
+{
+  "id": "ac35a408-0aa5-4aa3-9744-1b1383f2f591",
+  "template": "app-nolayers",
+  "versions": {
+    "AbpFramework": "10.4.1",
+    "AbpStudio": "3.0.4",
+    "TargetDotnetFramework": "net10.0"
+  },
+  "modules": {
+    "Chess.API": {
+      "path": "Chess.API.abpmdl"
+    }
+  },
+  "runProfiles": {
+    "Default": {
+      "path": "etc/run-profiles/Default.abprun.json"
+    }
+  },
+  "options": {
+    "httpRequests": {
+      "ignoredUrls": [
+      
+      ]
+    }
+  },
+  "creatingStudioConfiguration": {
+    "template": "app-nolayers",
+    "createdAbpStudioVersion": "3.0.4",
+    "creationTool": "ABP Studio UI",
+    "multiTenancy": "true",
+    "runInstallLibs": "",
+    "useLocalReferences": "false",
+    "uiFramework": "no-ui",
+    "databaseProvider": "ef",
+    "runDbMigrator": "",
+    "includeTests": "false",
+    "databaseManagementSystem": "postgresql",
+    "createInitialMigration": "",
+    "theme": "leptonx-lite",
+    "themeStyle": "",
+    "themeMenuPlacement": "",
+    "publicWebsite": "",
+    "socialLogin": "false",
+    "sampleCrudPage": "true",
+    "selectedLanguages": ["English", ],
+    "defaultLanguage": "English",
+    "createCommand": "abp new Chess.API -t app-nolayers --mobile  --database-provider ef --database-management-system postgresql --theme leptonx-lite --skip-migration  --skip-migrator  --no-tests --without-cms-kit --sample-crud-page --dont-run-install-libs --dont-run-bundling --no-social-logins -no-gdpr -no-openiddict-admin-ui -no-audit-logging -no-file-management -no-language-management -no-text-template-management"
+  }
+}
