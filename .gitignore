@@ -187,8 +187,9 @@ ClientBin/
 ~$*
 *~
 *.dbmdl
-*.dbproj.schemaview
 *.pfx
+!Chess.API/openiddict.pfx
+*.dbproj.schemaview
 *.publishsettings
 node_modules/
 orleans.codegen.cs
