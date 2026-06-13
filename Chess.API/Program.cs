@@ -1,13 +1,15 @@
-using System;
 using Chess.API.Data;
 using Serilog;
 using Serilog.Events;
+using System.Text.Json.Serialization;
 using Volo.Abp.Data;
-
+using Microsoft.AspNetCore.Mvc;
 namespace Chess.API;
 
 public class Program
 {
+    // to create migration Add-Migration ""
+    // to migrate --migrate-database
     public async static Task<int> Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
@@ -44,6 +46,12 @@ public class Program
                 builder.Services.AddDataMigrationEnvironment();
             }
             await builder.AddApplicationAsync<APIModule>();
+            builder.Services.Configure<JsonOptions>(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter());
+            });
+
             var app = builder.Build();
             await app.InitializeApplicationAsync();
 

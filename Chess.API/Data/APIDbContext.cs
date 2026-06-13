@@ -11,15 +11,16 @@ using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
 using Chess.API.Entities.Books;
+using Chess.API.Entities.Chess;
 
 namespace Chess.API.Data;
 
 public class APIDbContext : AbpDbContext<APIDbContext>
 {
     public DbSet<Book> Books { get; set; }
-    
-    public const string DbTablePrefix = "App";
-    public const string DbSchema = null;
+    public DbSet<GameResult> GameStates { get; set; }
+
+    public const string DbSchema = "games";
 
     public APIDbContext(DbContextOptions<APIDbContext> options)
         : base(options)
@@ -44,13 +45,27 @@ public class APIDbContext : AbpDbContext<APIDbContext>
         
         builder.Entity<Book>(b =>
         {
-            b.ToTable(DbTablePrefix + "Books",
+            b.ToTable("Books",
                 DbSchema);
             b.ConfigureByConvention(); //auto configure for the base class props
             b.Property(x => x.Name).IsRequired().HasMaxLength(128);
         });
-        
+
         /* Configure your own entities here */
+        builder.Entity<GameResult>(b =>
+        {
+            b.ToTable("GameResults", DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.Property(x => x.Winner)
+                .HasConversion<string>()
+                .IsRequired();
+
+            b.Property(x => x.StartTime)
+                .IsRequired();
+        });
+
     }
 }
 

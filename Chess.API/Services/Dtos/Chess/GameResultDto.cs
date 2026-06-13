@@ -1,10 +1,8 @@
-﻿using System.Drawing;
-using Volo.Abp.Domain.Entities.Auditing;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using Chess.API.Entities.Chess;
 
-namespace Chess.API.Entities.Chess
+namespace Chess.API.Services.Dtos.Chess
 {
-    public class GameState : AuditedAggregateRoot<Guid>
+    public class GameResultDto
     {
         public Guid Id { get; set; }
         public Color Winner { get; set; }
