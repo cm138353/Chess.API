@@ -17,7 +17,7 @@ namespace Chess.API.Data;
 
 public class APIDbContext : AbpDbContext<APIDbContext>
 {
-    public DbSet<Book> Books { get; set; }
+    //public DbSet<Book> Books { get; set; }
     public DbSet<GameResult> GameStates { get; set; }
 
     public const string DbSchema = "games";
@@ -43,13 +43,13 @@ public class APIDbContext : AbpDbContext<APIDbContext>
         builder.ConfigureOpenIddict();
         builder.ConfigureTenantManagement();
         
-        builder.Entity<Book>(b =>
-        {
-            b.ToTable("Books",
-                DbSchema);
-            b.ConfigureByConvention(); //auto configure for the base class props
-            b.Property(x => x.Name).IsRequired().HasMaxLength(128);
-        });
+        //builder.Entity<Book>(b =>
+        //{
+        //    b.ToTable("Books",
+        //        DbSchema);
+        //    b.ConfigureByConvention(); //auto configure for the base class props
+        //    b.Property(x => x.Name).IsRequired().HasMaxLength(128);
+        //});
 
         /* Configure your own entities here */
         builder.Entity<GameResult>(b =>
