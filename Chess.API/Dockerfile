@@ -8,6 +8,8 @@ RUN dotnet publish Chess.API.csproj -c Release -o /app/publish
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 
+ENV ASPNETCORE_URLS=http://+:10000
+
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "Chess.API.dll"]
