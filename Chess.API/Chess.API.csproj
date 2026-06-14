@@ -121,4 +121,10 @@
     <None Remove="**\*.abppkg.analyze.json" />
     <Content Remove="$(UserProfile)\.nuget\packages\*\*\contentFiles\any\*\*.abppkg*" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Content Update="wwwroot\libs\**\*">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
 </Project>
