@@ -16,7 +16,7 @@ public class ChessController : AbpController
 
     [HttpGet]
     [Route("GetGame/{Id}")]
-    public ActionResult<GameResultDto> GetGame(Guid Id)
+    public ActionResult<GameStateDto> GetGame(Guid Id)
     {
         var game = _appService.GetAsync(Id);
         if (game == null)
@@ -27,9 +27,20 @@ public class ChessController : AbpController
 
     [HttpPost]
     [Route("CreateGame")]
-    public ActionResult<GameResultDto> CreateGame(GameResultDto gameStateDto)
+    public ActionResult<GameStateDto> CreateGame()
     {
-        var game = _appService.CreateAsync(gameStateDto);
+        var game = _appService.CreateAsync();
+        if (game == null)
+            return StatusCode(500, "Could not save Game");
+
+        return Ok(game);
+    }
+
+    [HttpPost]
+    [Route("UpdateGame")]
+    public async Task<ActionResult<GameStateDto>> UpdateGame(MakeMoveDto gameStateDto)
+    {
+        var game = await _appService.UpdateAsync(gameStateDto);
         if (game == null)
             return StatusCode(500, "Could not save Game");
 

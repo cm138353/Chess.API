@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Chess.API.Migrations
 {
     /// <inheritdoc />
-    public partial class AddedGameState : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -471,36 +471,14 @@ namespace Chess.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Books",
-                schema: "games",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(128)", maxLength: 128, nullable: false),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    PublishDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Price = table.Column<float>(type: "real", nullable: false),
-                    ExtraProperties = table.Column<string>(type: "text", nullable: false),
-                    ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
-                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
-                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
-                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Books", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "GameStates",
                 schema: "games",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Winner = table.Column<int>(type: "integer", nullable: false),
-                    MoveHistory = table.Column<List<string>>(type: "text[]", nullable: false),
-                    StartTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CurrentFen = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Status = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    Winner = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
                     EndTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
                     ExtraProperties = table.Column<string>(type: "text", nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
@@ -874,6 +852,37 @@ namespace Chess.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GameMoves",
+                schema: "games",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    GameStateId = table.Column<Guid>(type: "uuid", nullable: false),
+                    MoveNumber = table.Column<int>(type: "integer", nullable: false),
+                    Color = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    MoveUci = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    MoveSan = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: true),
+                    FenBefore = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    FenAfter = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    CreatorId = table.Column<Guid>(type: "uuid", nullable: true),
+                    LastModificationTime = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    LastModifierId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GameMoves", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_GameMoves_GameStates_GameStateId",
+                        column: x => x.GameStateId,
+                        principalSchema: "games",
+                        principalTable: "GameStates",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OpenIddictAuthorizations",
                 columns: table => new
                 {
@@ -1196,6 +1205,12 @@ namespace Chess.API.Migrations
                 column: "UserName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_GameMoves_GameStateId",
+                schema: "games",
+                table: "GameMoves",
+                column: "GameStateId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OpenIddictApplications_ClientId",
                 table: "OpenIddictApplications",
                 column: "ClientId");
@@ -1317,11 +1332,7 @@ namespace Chess.API.Migrations
                 name: "AbpUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Books",
-                schema: "games");
-
-            migrationBuilder.DropTable(
-                name: "GameStates",
+                name: "GameMoves",
                 schema: "games");
 
             migrationBuilder.DropTable(
@@ -1347,6 +1358,10 @@ namespace Chess.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "AbpUsers");
+
+            migrationBuilder.DropTable(
+                name: "GameStates",
+                schema: "games");
 
             migrationBuilder.DropTable(
                 name: "OpenIddictAuthorizations");

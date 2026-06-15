@@ -1,16 +1,16 @@
-﻿using Chess.API.Services.Dtos.Books;
-using Chess.API.Services.Dtos.Chess;
+﻿using Chess.API.Services.Dtos.Chess;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
 
 namespace Chess.API.Services.Chess
 {
-    public interface IChessAppService :
-            ICrudAppService< //Defines CRUD methods
-            GameResultDto, //Used to show game
-            Guid, //Primary key of the book entity
-            PagedAndSortedResultRequestDto, //Used for paging/sorting
-            GameResultDto> //Used to create/update a book
+    public interface IChessAppService 
     {
+        Task<GameStateDto> CreateAsync();
+        Task<GameStateDto> GetAsync(Guid id);
+        Task<PagedResultDto<GameStateDto>> GetListAsync(PagedAndSortedResultRequestDto input);
+        Task<GameStateDto> UpdateAsync(MakeMoveDto input);
+        Task DeleteAsync(Guid id);
+
     }
 }

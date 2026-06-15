@@ -10,7 +10,6 @@ using Volo.Abp.OpenIddict.EntityFrameworkCore;
 using Volo.Abp.PermissionManagement.EntityFrameworkCore;
 using Volo.Abp.SettingManagement.EntityFrameworkCore;
 using Volo.Abp.TenantManagement.EntityFrameworkCore;
-using Chess.API.Entities.Books;
 using Chess.API.Entities.Chess;
 
 namespace Chess.API.Data;
@@ -18,7 +17,8 @@ namespace Chess.API.Data;
 public class APIDbContext : AbpDbContext<APIDbContext>
 {
     //public DbSet<Book> Books { get; set; }
-    public DbSet<GameResult> GameStates { get; set; }
+    public DbSet<GameState> GameStates { get; set; }
+    public DbSet<GameMove> GameMoves { get; set; }
 
     public const string DbSchema = "games";
 
@@ -52,18 +52,66 @@ public class APIDbContext : AbpDbContext<APIDbContext>
         //});
 
         /* Configure your own entities here */
-        builder.Entity<GameResult>(b =>
+        builder.Entity<GameState>(b =>
         {
-            b.ToTable("GameResults", DbSchema);
+            b.ToTable("GameStates", DbSchema);
 
             b.ConfigureByConvention();
 
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.CurrentFen)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            b.Property(x => x.Status)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(50);
+
             b.Property(x => x.Winner)
                 .HasConversion<string>()
+                .HasMaxLength(20);
+
+            b.Property(x => x.EndTime)
+                .IsRequired(false);
+
+            b.HasMany(x => x.Moves)
+                .WithOne()
+                .HasForeignKey(x => x.GameStateId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+        builder.Entity<GameMove>(b =>
+        {
+            b.ToTable("GameMoves", DbSchema);
+
+            b.ConfigureByConvention();
+
+            b.HasKey(x => x.Id);
+
+            b.Property(x => x.MoveNumber)
                 .IsRequired();
 
-            b.Property(x => x.StartTime)
-                .IsRequired();
+            b.Property(x => x.Player)
+                .IsRequired()
+                .HasConversion<string>()
+                .HasMaxLength(20);
+
+            b.Property(x => x.MoveUci)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            b.Property(x => x.MoveSan)
+                .HasMaxLength(10);
+
+            b.Property(x => x.FenBefore)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            b.Property(x => x.FenAfter)
+                .IsRequired()
+                .HasMaxLength(200);
         });
 
     }
