@@ -12,4 +12,4 @@ ENV ASPNETCORE_URLS=http://+:10000
 
 COPY --from=build /app/publish .
 
-ENTRYPOINT ["dotnet", "Chess.API.dll"]
+ENTRYPOINT ["/bin/sh", "-c", "dotnet Chess.API.dll --migrate-database && exec dotnet Chess.API.dll"]
